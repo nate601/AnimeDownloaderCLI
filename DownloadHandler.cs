@@ -16,13 +16,14 @@ namespace AnimeDown
             irc.SetupIrc("irc.rizon.net", "animeguy69" + new Random().Next(70), "#horriblesubs", 6697);
 
             irc.DccClient.OnDccEvent += downloadStatusChanged;
+            // Grant Poquiz
+            // Changes Download location to the application path instead of a new folder
             irc.SetCustomDownloadDir(System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
             irc.StartClient();
         }
 
         private void downloadStatusChanged(object sender, DCCEventArgs args)
         {
-
             Console.Clear();
             Console.WriteLine($"Current File: {args.FileName} ");
             Console.WriteLine($"{args.Progress}%");
