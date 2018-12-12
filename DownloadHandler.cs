@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using SimpleIRCLib;
 
 namespace AnimeDown
@@ -18,7 +19,7 @@ namespace AnimeDown
             irc.DccClient.OnDccEvent += downloadStatusChanged;
             // Grant Poquiz
             // Changes Download location to the application path instead of a new folder
-            irc.SetCustomDownloadDir(System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
+            irc.SetCustomDownloadDir(Directory.GetCurrentDirectory());
             irc.StartClient();
         }
 
