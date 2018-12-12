@@ -64,12 +64,6 @@ public class HorribleSubsPacklist
 
         return showVerified;
         
-
-
-
-
-
-
     }
 
     public class ShowEntry

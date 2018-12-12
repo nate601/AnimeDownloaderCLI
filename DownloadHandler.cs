@@ -13,16 +13,15 @@ namespace AnimeDown
         public DownloadHandler()
         {
             irc = new SimpleIRC();
-            irc.SetupIrc("irc.rizon.net", "hentailover" + new Random().Next(70), "#horriblesubs", 6697);
+            irc.SetupIrc("irc.rizon.net", "animeguy69" + new Random().Next(70), "#horriblesubs", 6697);
 
             irc.DccClient.OnDccEvent += downloadStatusChanged;
-
+            irc.SetCustomDownloadDir(System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
             irc.StartClient();
         }
 
         private void downloadStatusChanged(object sender, DCCEventArgs args)
         {
-
 
             Console.Clear();
             Console.WriteLine($"Current File: {args.FileName} ");
@@ -50,12 +49,9 @@ namespace AnimeDown
         {
             irc.SendMessageToChannel($@"/msg {botName} xdcc send {packNumber.ToString()}", "#horriblesubs");
         }
-
-
-
+        
         public void Download(string botName, int packNumber)
         {
-
             downloadQueue.Enqueue(new DownloadPair(botName, packNumber));
             if (firstRun)
             {
