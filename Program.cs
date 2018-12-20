@@ -212,9 +212,7 @@ namespace AnimeDown
 
         public static void Download(List<HorribleSubsPacklist.ShowEntry> entries)
         {
-
             
-
             foreach (var showEntry in entries)
             {
                 Download(showEntry);
