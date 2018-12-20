@@ -29,17 +29,23 @@ namespace AnimeDown
             Console.WriteLine("0: 1080p");
             Console.WriteLine("1: 720p");
             Console.WriteLine("2: SD");
-            var resolution = ReadNumber("");
+            // 12/19/2018
+            // Grant Poquiz
+            // changed response for reading in quality to be the same as the response for range
+            var response = Console.ReadKey(true);
             var resolutionEnum = HorribleSubsPacklist.Quality.TEN_EIGHTY_P;
-            switch (resolution)
+            switch (response.Key)
             {
-                case 0:
+                case ConsoleKey.D0:
+                case ConsoleKey.NumPad0:
                     resolutionEnum = HorribleSubsPacklist.Quality.TEN_EIGHTY_P;
                     break;
-                case 1:
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
                     resolutionEnum = HorribleSubsPacklist.Quality.SEVEN_TWENTY_P;
                     break;
-                case 2:
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
                     resolutionEnum = HorribleSubsPacklist.Quality.STANDARD_DEFINITION;
                     break;
                 default:
@@ -60,7 +66,7 @@ namespace AnimeDown
             prompt:
             Console.WriteLine($"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowName(shows)} out.");
             Console.WriteLine("Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?");
-            var response = Console.ReadKey(true);
+            response = Console.ReadKey(true);
             switch (response.Key)
             {
                 case ConsoleKey.A:
