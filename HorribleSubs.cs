@@ -123,7 +123,7 @@ public class HorribleSubsPacklist
         public string PrettyTitle()
         {
             Regex titlePrettifier = new Regex("(.+)(?: -)");
-            return titlePrettifier.Match(Title).Groups[1].Value;
+            return titlePrettifier.Match(Title).Groups[1].Value.Split(']')[1].TrimStart(' ');
         }
 
         public void PrettyPrint()
