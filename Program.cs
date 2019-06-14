@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace AnimeDown
     {
         private static bool verboseLogging = false;
         private static DownloadHandler handler = new DownloadHandler();
+
+        private static bool hasBegunDownload = false;
 
         static void Main(string[] args)
         {
@@ -82,7 +85,7 @@ namespace AnimeDown
             
 
         }
-
+        
         public static void DownloadAllPrompt(List<HorribleSubsPacklist.ShowEntry> shows)
         {
             Console.WriteLine($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes!");
@@ -207,6 +210,13 @@ namespace AnimeDown
 
         public static void Download(HorribleSubsPacklist.ShowEntry entry)
         {
+            if(!hasBegunDownload)
+            {
+                handler.SetDownloadDirectory(Path.Combine(Directory.GetCurrentDirectory(), entry.PrettyTitle()));
+
+                hasBegunDownload = true;
+            }
+            
             handler.Download(entry.botName, int.Parse(entry.packNumber));
         }
 
