@@ -74,5 +74,9 @@ namespace AnimeDown
                 this.packNumber = packNumber;
             }
         }
+        public void SetDownloadDirectory(string path)
+        {
+            irc.SetCustomDownloadDir(path);
+        }
     }
 }
