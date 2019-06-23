@@ -13,7 +13,7 @@ namespace AnimeDown
     class Program
     {
         private static bool verboseLogging = false;
-        private static DownloadHandler handler = new DownloadHandler();
+        private static readonly DownloadHandler handler = new DownloadHandler();
 
         private static bool hasBegunDownload = false;
 
@@ -35,7 +35,7 @@ namespace AnimeDown
             // Grant Poquiz
             // changed response for reading in quality to be the same as the response for range
             var response = Console.ReadKey(true);
-            var resolutionEnum = HorribleSubsPacklist.Quality.TEN_EIGHTY_P;
+            HorribleSubsPacklist.Quality resolutionEnum;
             switch (response.Key)
             {
                 case ConsoleKey.D0:
