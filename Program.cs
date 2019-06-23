@@ -12,7 +12,7 @@ namespace AnimeDown {
     class Program {
         private static readonly DownloadHandler handler = new DownloadHandler ();
         private static bool hasBegunDownload = false;
-        static void Main (string[] args) {
+        static void Main () {
 
             Console.WriteLine ("Anime Downloader");
             Console.Write ("Anime Title:");
