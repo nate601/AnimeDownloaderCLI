@@ -3,7 +3,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,12 +21,12 @@ namespace AnimeDown
         {
             if (args.Length > 0 && args[0] == "-l")
                 verboseLogging = true;
-            
+
 
             Console.WriteLine("Anime Downloader");
             Console.Write("Anime Title:");
             var animeTitle = Console.ReadLine();
-            resolutionPrompt:
+        resolutionPrompt:
             Console.WriteLine("Resolution:");
             Console.WriteLine("0: 1080p");
             Console.WriteLine("1: 720p");
@@ -61,12 +60,12 @@ namespace AnimeDown
             HorribleSubsPacklist horrible = new HorribleSubsPacklist();
             var shows = horrible.GetShow(animeTitle, resolutionEnum);
 
-            //foreach (var showEntry in shows)
-            //{
-            //    showEntry.PrettyPrint();
-            //}
+        //foreach (var showEntry in shows)
+        //{
+        //    showEntry.PrettyPrint();
+        //}
 
-            prompt:
+        prompt:
             Console.WriteLine($"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowName(shows)} out.");
             Console.WriteLine("Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?");
             response = Console.ReadKey(true);
@@ -88,10 +87,10 @@ namespace AnimeDown
             }
 
             Console.ReadKey();
-            
+
 
         }
-        
+
         public static void DownloadAllPrompt(List<HorribleSubsPacklist.ShowEntry> shows)
         {
             Console.WriteLine($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes!");
@@ -100,7 +99,7 @@ namespace AnimeDown
             List<string> botNames = new List<string>();
             foreach (var showEntry in shows)
             {
-                if(!botNames.Contains(showEntry.botName))
+                if (!botNames.Contains(showEntry.botName))
                     botNames.Add(showEntry.botName);
             }
 
@@ -109,13 +108,13 @@ namespace AnimeDown
                 Console.WriteLine(botIndex + " : " + botNames[botIndex]);
             }
 
-            var botNumber =  ReadNumber("Which bot would you like to download from?");
-
-           
-            
+            var botNumber = ReadNumber("Which bot would you like to download from?");
 
 
-            for (int i = 0; i <=HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows); i++)
+
+
+
+            for (int i = 0; i <= HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows); i++)
             {
                 foreach (var show in shows)
                 {
@@ -135,7 +134,7 @@ namespace AnimeDown
         }
         public static void DownloadSomePrompt(List<HorribleSubsPacklist.ShowEntry> shows)
         {
-            rangePrompt:
+        rangePrompt:
             var episodeRangeBegin =
                 ReadNumber(
                     $"Which episode would you like the range to begin with? (1-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})");
@@ -184,7 +183,7 @@ namespace AnimeDown
                 }
             }
             Download(showOptions);
-            
+
 
 
         }
@@ -216,19 +215,19 @@ namespace AnimeDown
 
         public static void Download(HorribleSubsPacklist.ShowEntry entry)
         {
-            if(!hasBegunDownload)
+            if (!hasBegunDownload)
             {
                 handler.SetDownloadDirectory(Path.Combine(Directory.GetCurrentDirectory(), entry.PrettyTitle()));
 
                 hasBegunDownload = true;
             }
-            
+
             handler.Download(entry.botName, int.Parse(entry.packNumber));
         }
 
         public static void Download(List<HorribleSubsPacklist.ShowEntry> entries)
         {
-            
+
             foreach (var showEntry in entries)
             {
                 Download(showEntry);
@@ -252,18 +251,18 @@ namespace AnimeDown
 
         public static void Log(string log, bool verbose = false)
         {
-           if(!verbose)
-           {
-               Console.WriteLine(log);
-           }
-           else
-           {
-               if(verboseLogging ||System.Diagnostics.Debugger.IsAttached)
-                   Console.WriteLine("[VERB] : " +log);
-           }
+            if (!verbose)
+            {
+                Console.WriteLine(log);
+            }
+            else
+            {
+                if (verboseLogging || System.Diagnostics.Debugger.IsAttached)
+                    Console.WriteLine("[VERB] : " + log);
+            }
         }
 
     }
-    
-    
+
+
 }
