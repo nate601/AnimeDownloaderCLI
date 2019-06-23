@@ -45,20 +45,32 @@ namespace AnimeDown {
             HorribleSubsPacklist horrible = new HorribleSubsPacklist ();
             var shows = horrible.GetShow (animeTitle, resolutionEnum);
 
+            var showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames (shows);
+
+            Console.WriteLine ($"There are {showNamePossibilities.Count} results for {animeTitle} on horriblesubs.");
+            Console.WriteLine ("Which one would you like to download?");
+            for (int i = 0; i < showNamePossibilities.Count; i++) {
+                string item = (string) showNamePossibilities[i];
+                Console.WriteLine ($"{i} : {item}");
+            }
+            string showNameChosen = showNamePossibilities[ReadNumber ("")];
+
+            List<HorribleSubsPacklist.ShowEntry> showNameShaken = HorribleSubsPacklist.ShowEntry.ShakeByShowName (showNameChosen, shows);
+
             prompt:
-                Console.WriteLine ($"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowName(shows)} out.");
+                Console.WriteLine ($"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(showNameShaken)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowNames(showNameShaken).First()} out.");
             Console.WriteLine ("Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?");
             response = Console.ReadKey (true);
             switch (response.Key) {
                 case ConsoleKey.A:
-                    DownloadAllPrompt (shows);
+                    DownloadAllPrompt (showNameShaken);
                     break;
                 case ConsoleKey.S:
-                    DownloadSomePrompt (shows);
+                    DownloadSomePrompt (showNameShaken);
 
                     break;
                 case ConsoleKey.O:
-                    DownloadOnePrompt (shows);
+                    DownloadOnePrompt (showNameShaken);
 
                     break;
                 default:

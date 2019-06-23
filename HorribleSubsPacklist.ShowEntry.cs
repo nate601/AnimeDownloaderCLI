@@ -17,8 +17,15 @@ public partial class HorribleSubsPacklist {
             return episodeNumbers;
         }
 
-        public static string GetShowName (List<ShowEntry> shows) {
-            return shows.First ().PrettyTitle ();
+        public static List<string> GetShowNames (List<ShowEntry> shows) {
+            List<string> showNames = new List<string> ();
+            foreach (var show in shows) {
+                if (!showNames.Contains (show.PrettyTitle ())) {
+                    showNames.Add (show.PrettyTitle ());
+                }
+            }
+            return showNames;
+
         }
         public string botName;
         public string packNumber;
@@ -58,6 +65,16 @@ public partial class HorribleSubsPacklist {
             Console.WriteLine ("├─" + botName);
             Console.WriteLine ("├─" + packNumber);
             Console.WriteLine ("└─" + sizeInMb + " megabytes");
+        }
+
+        internal static List<ShowEntry> ShakeByShowName (string showNameChosen, List<ShowEntry> shows) {
+            List<ShowEntry> retVal = new List<ShowEntry> ();
+
+            foreach (var item in shows) {
+                if (item.PrettyTitle () == showNameChosen)
+                    retVal.Add (item);
+            }
+            return retVal;
         }
     }
 
