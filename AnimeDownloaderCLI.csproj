@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+  <Reference Include="SimpleIRCLib.dll">
+    <HintPath>SimpleIRCLib.dll</HintPath>
+    <SpecificVersion>False</SpecificVersion> 
+    <!-- You may set it to true if your dll has a specific version -->
+  </Reference>
+</ItemGroup>
+
+</Project>
