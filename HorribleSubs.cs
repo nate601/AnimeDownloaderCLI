@@ -16,10 +16,6 @@ public class HorribleSubsPacklist {
         req.Method = "GET";
 
         HttpWebResponse resp = (HttpWebResponse) req.GetResponse ();
-        int responseCode = (int) resp.StatusCode;
-        Console.WriteLine ("Sending 'GET' request to URL : " + url);
-        Console.WriteLine ("Response Code : " + responseCode);
-
         string response;
         using (StreamReader input = new StreamReader (resp.GetResponseStream ())) {
             response = input.ReadToEnd ();
@@ -80,8 +76,6 @@ public class HorribleSubsPacklist {
         public ShowEntry (string lineEntry) {
 
             Regex nameMatcher = new Regex ("(?:b:\"|f:\")([^\"]*)"); //Match 0 group 1 = bot name
-            //match 1 group 1 = show name
-
             var nameMatches = nameMatcher.Match (lineEntry);
             botName = nameMatches.Groups[1].Value;
             Title = nameMatches.NextMatch ().Groups[1].Value;

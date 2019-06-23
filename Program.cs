@@ -12,9 +12,7 @@ namespace AnimeDown {
     class Program {
         private static bool verboseLogging = false;
         private static readonly DownloadHandler handler = new DownloadHandler ();
-
         private static bool hasBegunDownload = false;
-
         static void Main (string[] args) {
             if (args.Length > 0 && args[0] == "-l")
                 verboseLogging = true;
@@ -143,7 +141,6 @@ namespace AnimeDown {
                 }
             }
             Download (showOptions);
-
         }
         public static void DownloadOnePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             var episodeNumber = ReadNumber ("Which episode would you like to download? (1-" +
