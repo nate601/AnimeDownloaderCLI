@@ -10,12 +10,9 @@ using SimpleIRCLib;
 
 namespace AnimeDown {
     class Program {
-        private static bool verboseLogging = false;
         private static readonly DownloadHandler handler = new DownloadHandler ();
         private static bool hasBegunDownload = false;
         static void Main (string[] args) {
-            if (args.Length > 0 && args[0] == "-l")
-                verboseLogging = true;
 
             Console.WriteLine ("Anime Downloader");
             Console.Write ("Anime Title:");
@@ -189,16 +186,5 @@ namespace AnimeDown {
 
             return result;
         }
-
-        public static void Log (string log, bool verbose = false) {
-            if (!verbose) {
-                Console.WriteLine (log);
-            } else {
-                if (verboseLogging || System.Diagnostics.Debugger.IsAttached)
-                    Console.WriteLine ("[VERB] : " + log);
-            }
-        }
-
     }
-
 }
