@@ -114,11 +114,11 @@ namespace AnimeDown {
         public static void DownloadSomePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             rangePrompt : var episodeRangeBegin =
                 ReadNumber (
-                    $"Which episode would you like the range to begin with? (1-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})", HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
+                    $"Which episode would you like the range to begin with? (1-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + 1);
 
             var episodeRangeEnd =
                 ReadNumber (
-                    $"Which episode would you like the range to end with? ({episodeRangeBegin}-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})", episodeRangeBegin, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
+                    $"Which episode would you like the range to end with? ({episodeRangeBegin}-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})", episodeRangeBegin, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + 1);
 
             if (episodeRangeEnd <= episodeRangeBegin) {
                 Console.WriteLine ("Episode range end must be greater than the beginning of the episode range!");
@@ -153,7 +153,7 @@ namespace AnimeDown {
         }
         public static void DownloadOnePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             var episodeNumber = ReadNumber ("Which episode would you like to download? (1-" +
-                HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + ")", HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
+                HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + ")", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
 
             List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
             foreach (var show in shows) {
@@ -178,11 +178,15 @@ namespace AnimeDown {
                 hasBegunDownload = true;
             }
 
-            handler.Download (new DownloadHandler.DownloadPair (entry.botName, int.Parse (entry.packNumber), entry.PrettyTitle ()));
+            DownloadHandler.DownloadPair pair = new DownloadHandler.DownloadPair (
+                entry.botName,
+                int.Parse (entry.packNumber),
+                $"{entry.PrettyTitle ()} Episode {entry.episodeNumber}"
+            );
+            handler.Download (pair);
         }
 
         public static void Download (List<HorribleSubsPacklist.ShowEntry> entries) {
-
             foreach (var showEntry in entries) {
                 Download (showEntry);
             }
