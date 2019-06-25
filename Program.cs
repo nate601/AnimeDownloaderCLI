@@ -10,7 +10,7 @@ using SimpleIRCLib;
 
 namespace AnimeDown {
     class Program {
-        private static readonly DownloadHandler handler = new DownloadHandler ();
+        private static readonly Lazy<DownloadHandler> handler = new Lazy<DownloadHandler> ();
         private static bool hasBegunDownload = false;
         static void Main () {
 
@@ -173,7 +173,7 @@ namespace AnimeDown {
 
         private static void Download (HorribleSubsPacklist.ShowEntry entry) {
             if (!hasBegunDownload) {
-                handler.SetDownloadDirectory (Path.Combine (Directory.GetCurrentDirectory (), entry.PrettyTitle ()));
+                handler.Value.SetDownloadDirectory (Path.Combine (Directory.GetCurrentDirectory (), entry.PrettyTitle ()));
 
                 hasBegunDownload = true;
             }
@@ -183,7 +183,7 @@ namespace AnimeDown {
                 int.Parse (entry.packNumber),
                 $"{entry.PrettyTitle ()} Episode {entry.episodeNumber}"
             );
-            handler.Download (pair);
+            handler.Value.Download (pair);
         }
 
         private static void Download (List<HorribleSubsPacklist.ShowEntry> entries) {
