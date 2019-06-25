@@ -178,7 +178,7 @@ namespace AnimeDown {
                 hasBegunDownload = true;
             }
 
-            handler.Download (entry.botName, int.Parse (entry.packNumber));
+            handler.Download (new DownloadHandler.DownloadPair (entry.botName, int.Parse (entry.packNumber), entry.PrettyTitle ()));
         }
 
         public static void Download (List<HorribleSubsPacklist.ShowEntry> entries) {
