@@ -17,7 +17,7 @@ namespace AnimeDown {
             irc = new SimpleIRC ();
             irc.SetupIrc (RIZON_IRC_SERVER_HOST, IRC_USERNAME_PREFIX + new Random ().Next (100), RIZON_IRC_CHANNEL_NAME, RIZON_IRC_SERVER_PORT);
             irc.DccClient.OnDccEvent += DownloadStatusChanged;
-            irc.SetCustomDownloadDir (System.IO.Directory.GetCurrentDirectory ());
+            irc.SetCustomDownloadDir (System.IO.Directory.GetCurrentDirectory ()); // ! This will be overwritten later.
             irc.StartClient ();
         }
         private void DownloadStatusChanged (object sender, DCCEventArgs args) {
