@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -59,6 +60,7 @@ public partial class HorribleSubsPacklist {
             return titlePrettifier.Match (Title).Groups[1].Value.Split (']') [1].TrimStart (' ');
         }
 
+        [Conditional ("DEBUG")]
         public void PrettyPrint () {
             Console.WriteLine (PrettyTitle ());
             Console.WriteLine ("├─" + episodeNumber);

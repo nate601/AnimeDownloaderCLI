@@ -81,7 +81,7 @@ namespace AnimeDown {
 
         }
 
-        public static void DownloadAllPrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
+        private static void DownloadAllPrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             Console.WriteLine ($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes!");
             List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
 
@@ -111,7 +111,7 @@ namespace AnimeDown {
             }
             Download (showOptions);
         }
-        public static void DownloadSomePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
+        private static void DownloadSomePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             rangePrompt : var episodeRangeBegin =
                 ReadNumber (
                     $"Which episode would you like the range to begin with? (1-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + 1);
@@ -151,7 +151,7 @@ namespace AnimeDown {
             }
             Download (showOptions);
         }
-        public static void DownloadOnePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
+        private static void DownloadOnePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             var episodeNumber = ReadNumber ("Which episode would you like to download? (1-" +
                 HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + ")", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
 
@@ -171,7 +171,7 @@ namespace AnimeDown {
 
         }
 
-        public static void Download (HorribleSubsPacklist.ShowEntry entry) {
+        private static void Download (HorribleSubsPacklist.ShowEntry entry) {
             if (!hasBegunDownload) {
                 handler.SetDownloadDirectory (Path.Combine (Directory.GetCurrentDirectory (), entry.PrettyTitle ()));
 
@@ -186,7 +186,7 @@ namespace AnimeDown {
             handler.Download (pair);
         }
 
-        public static void Download (List<HorribleSubsPacklist.ShowEntry> entries) {
+        private static void Download (List<HorribleSubsPacklist.ShowEntry> entries) {
             foreach (var showEntry in entries) {
                 Download (showEntry);
             }
@@ -198,7 +198,7 @@ namespace AnimeDown {
         /// <param name="min">The minimum number that the operator must enter (inclusive)</param>
         /// <param name="max">The maximum number that the operator must enter (exclusive)</param>
         /// <returns></returns>
-        public static int ReadNumber (string prompt, int min, int max) {
+        private static int ReadNumber (string prompt, int min, int max) {
             int result;
             while (true) {
                 Console.WriteLine (prompt);
@@ -214,6 +214,6 @@ namespace AnimeDown {
         /// <param name="prompt">The message with which to prompt the operator</param>
         /// <param name="max">The maximum number that the operator must enter (exclusive)</param>
         /// <returns></returns>
-        public static int ReadNumber (string prompt, int max) => ReadNumber (prompt, 0, max);
+        private static int ReadNumber (string prompt, int max) => ReadNumber (prompt, 0, max);
     }
 }
