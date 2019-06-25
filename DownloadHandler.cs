@@ -25,7 +25,7 @@ namespace AnimeDown {
             Console.WriteLine ($"Current File: {args.FileName} ");
             Console.WriteLine ($"{args.Progress}%");
             foreach (var downloadPair in downloadQueue) {
-                Console.WriteLine ($"{downloadPair.BotName} : {downloadPair.PackNumber}");
+                Console.WriteLine ($"{downloadPair.DisplayTitle} : {downloadPair.BotName} : {downloadPair.PackNumber}");
             }
             if (args.Status == COMPLETED_STATUS && downloadQueue.Count != 0) {
                 var next = downloadQueue.Dequeue ();
@@ -36,31 +36,28 @@ namespace AnimeDown {
             }
         }
 
-        [Obsolete ("Use DownloadPair")]
-        public void SendToDownloadbot (string botName, int packNumber) {
-            irc.SendMessageToChannel ($@"/msg {botName} xdcc send {packNumber.ToString()}", RIZON_IRC_CHANNEL_NAME);
-        }
-        public void SendToDownloadbot (DownloadPair pair) {
+        private void SendToDownloadbot (DownloadPair pair) {
             irc.SendMessageToChannel ($@"/msg {pair.BotName} xdcc send {pair.PackNumber.ToString()}", RIZON_IRC_CHANNEL_NAME);
         }
 
-        public void Download (string botName, int packNumber) {
-            downloadQueue.Enqueue (new DownloadPair (botName, packNumber));
+        public void Download (DownloadPair pair) {
+            downloadQueue.Enqueue (pair);
             if (firstRun) {
                 var next = downloadQueue.Dequeue ();
                 SendToDownloadbot (next);
                 firstRun = false;
             }
         }
-
         public struct DownloadPair {
-            public string BotName { get; set; }
-            public int PackNumber { get; set; }
-
-            public DownloadPair (string botName, int packNumber) {
+            public DownloadPair (string botName, int packNumber, string displayTitle) {
                 this.BotName = botName;
                 this.PackNumber = packNumber;
+                this.DisplayTitle = displayTitle;
             }
+            public string BotName { get; set; }
+            public int PackNumber { get; set; }
+            public string DisplayTitle { get; set; }
+
         }
         public void SetDownloadDirectory (string path) {
             irc.SetCustomDownloadDir (path);
