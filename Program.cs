@@ -10,7 +10,12 @@ using SimpleIRCLib;
 
 namespace AnimeDown {
     class Program {
+        // ? Consider changing back from Lazy initialization
+        // ? Using lazy initialization prevents the program from 
+        // ? using resources connecting early, but now that user checking 
+        // ? is implemented this is slightly pointless
         private static readonly Lazy<DownloadHandler> handler = new Lazy<DownloadHandler> ();
+
         private static bool hasBegunDownload = false;
 
         static void Main () {
