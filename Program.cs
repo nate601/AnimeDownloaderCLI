@@ -11,13 +11,11 @@ using SimpleIRCLib;
 namespace AnimeDown {
     class Program {
         // ? Consider changing back from Lazy initialization
-        // ? Using lazy initialization prevents the program from 
-        // ? using resources connecting early, but now that user checking 
+        // ? Using lazy initialization prevents the program from
+        // ? using resources connecting early, but now that user checking
         // ? is implemented this is slightly pointless
         private static readonly Lazy<DownloadHandler> handler = new Lazy<DownloadHandler> ();
-
         private static bool hasBegunDownload = false;
-
         static void Main () {
             Console.WriteLine ("Anime Downloader");
             Console.Write ("Anime Title:");
@@ -45,13 +43,10 @@ namespace AnimeDown {
                 default:
                     goto resolutionPrompt;
             }
-
             Console.WriteLine ($"Searching for {animeTitle} on horribleSubs");
             HorribleSubsPacklist horrible = new HorribleSubsPacklist ();
             var shows = horrible.GetShow (animeTitle, resolutionEnum);
-
             var showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames (shows);
-
             Console.WriteLine ($"There are {showNamePossibilities.Count} results for {animeTitle} on horriblesubs.");
             Console.WriteLine ("Which one would you like to download?");
             for (int i = 0; i < showNamePossibilities.Count; i++) {
@@ -59,9 +54,7 @@ namespace AnimeDown {
                 Console.WriteLine ($"{i} : {item}");
             }
             string showNameChosen = showNamePossibilities[ReadNumber ("", showNamePossibilities.Count)];
-
             List<HorribleSubsPacklist.ShowEntry> showNameShaken = HorribleSubsPacklist.ShowEntry.ShakeByShowName (showNameChosen, shows);
-
             prompt:
                 Console.WriteLine ($"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(showNameShaken)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowNames(showNameShaken).First()} out.");
             Console.WriteLine ("Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?");
@@ -72,20 +65,14 @@ namespace AnimeDown {
                     break;
                 case ConsoleKey.S:
                     DownloadSomePrompt (showNameShaken);
-
                     break;
                 case ConsoleKey.O:
-                    DownloadOnePrompt (showNameShaken);
-
                     break;
                 default:
                     goto prompt;
             }
-
             Console.ReadKey ();
-
         }
-
         private static string PromptDownloadBot (List<HorribleSubsPacklist.ShowEntry> shows) {
             List<string> botNames = new List<string> ();
             foreach (var showEntry in shows) {
@@ -97,7 +84,6 @@ namespace AnimeDown {
             var botNumber = ReadNumber ("Which bot would you like to download from?", botNames.Count);
             return botNames[botNumber];
         }
-
         private static void DownloadAllPrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
             Console.WriteLine ($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes!");
@@ -123,15 +109,12 @@ namespace AnimeDown {
             var episodeRangeEnd =
                 ReadNumber (
                     $"Which episode would you like the range to end with? ({episodeRangeBegin}-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})", episodeRangeBegin, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + 1);
-
             if (episodeRangeEnd <= episodeRangeBegin) {
                 Console.WriteLine ("Episode range end must be greater than the beginning of the episode range!");
                 goto rangePrompt;
             }
             List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
-
             var botName = PromptDownloadBot (shows);
-
             for (int i = episodeRangeBegin; i <= episodeRangeEnd; i++) {
                 foreach (var show in shows) {
                     if (show.botName != botName)
