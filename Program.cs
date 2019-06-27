@@ -67,6 +67,7 @@ namespace AnimeDown {
                     DownloadSomePrompt (showNameShaken);
                     break;
                 case ConsoleKey.O:
+                    DownloadOnePrompt (showNameShaken);
                     break;
                 default:
                     goto prompt;
