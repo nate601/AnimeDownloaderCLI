@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AnimeDown
 {
@@ -13,7 +14,7 @@ namespace AnimeDown
         // ? is implemented this is slightly pointless
         private static readonly Lazy<DownloadHandler> handler = new Lazy<DownloadHandler>();
         private static bool hasBegunDownload = false;
-        static void Main()
+        static async void Main()
         {
             Console.WriteLine("Anime Downloader");
             Console.Write("Anime Title:");
@@ -51,8 +52,7 @@ namespace AnimeDown
                 "Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?\n",
                 DownloadMethodMap)(showNameShaken);
 
-
-            Console.ReadKey();
+            await Task.Delay(-1);
         }
         private static string ChooseBotPrompt(List<HorribleSubsPacklist.ShowEntry> shows)
         {
@@ -127,7 +127,7 @@ namespace AnimeDown
                 }
             }
             Download(showOptions);
-       }
+        }
         private static void DownloadOnePrompt(List<HorribleSubsPacklist.ShowEntry> shows)
         {
             var episodeNumber = ReadNumber("Which episode would you like to download?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows));
@@ -159,7 +159,7 @@ namespace AnimeDown
             DownloadHandler.DownloadPair pair = new DownloadHandler.DownloadPair(
                 entry.botName,
                 int.Parse(entry.packNumber),
-                $" { entry.PrettyTitle() } Episode { entry.episodeNumber }"
+                $"{ entry.PrettyTitle() } Episode { entry.episodeNumber }"
             );
             handler.Value.Download(pair);
         }
