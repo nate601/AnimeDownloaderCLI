@@ -40,16 +40,19 @@ namespace AnimeDown
             Console.WriteLine("Waiting for user list");
             using (AutoResetEvent are = new AutoResetEvent(false))
             {
-                Task task = Task.Factory.StartNew(async () =>
+
+                new Task(async () =>
                 {
                     while (currentUsers == null)
                     {
                         System.Console.WriteLine("Still waiting...");
-                        await Task.Delay(5000);
+                        await Task.Delay(500);
                     }
                     are.Set();
-                });
+                }).Start();
+
                 are.WaitOne((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
+
                 if (currentUsers == null)
                     throw new Exception("Never recieved a user list!");
                 Console.WriteLine("User list found.");
