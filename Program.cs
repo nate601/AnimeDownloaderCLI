@@ -14,7 +14,7 @@ namespace AnimeDown
         // ? is implemented this is slightly pointless
         private static readonly Lazy<DownloadHandler> handler = new Lazy<DownloadHandler>();
         private static bool hasBegunDownload = false;
-        static async void Main()
+        static async Task Main()
         {
             Console.WriteLine("Anime Downloader");
             Console.Write("Anime Title:");
