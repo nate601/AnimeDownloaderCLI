@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,8 +25,14 @@ namespace AnimeDown
             irc.SetupIrc(RIZON_IRC_SERVER_HOST, IRC_USERNAME_PREFIX + new Random().Next(100), RIZON_IRC_CHANNEL_NAME, RIZON_IRC_SERVER_PORT);
             irc.DccClient.OnDccEvent += DownloadStatusChanged;
             irc.IrcClient.OnUserListReceived += OnUserListReceived;
+            irc.IrcClient.OnRawMessageReceived += RawMessageDebugLog;
             irc.SetCustomDownloadDir(System.IO.Directory.GetCurrentDirectory()); // ! This will be overwritten later.
             irc.StartClient();
+        }
+
+        private void RawMessageDebugLog(object sender, IrcRawReceivedEventArgs e)
+        {
+            Debug.WriteLine(e.Message);
         }
 
         public bool IsUserPresent(string userName)
@@ -100,7 +107,7 @@ namespace AnimeDown
 
         private void SendToDownloadbot(DownloadPair pair)
         {
-            irc.SendMessageToChannel($@"/msg {pair.BotName} xdcc send {pair.PackNumber.ToString()}", RIZON_IRC_CHANNEL_NAME);
+            irc.SendMessageToChannel($@"/msg {pair.BotName} xdcc send #{pair.PackNumber.ToString()}", RIZON_IRC_CHANNEL_NAME);
         }
 
         public void Download(DownloadPair pair)
@@ -111,6 +118,7 @@ namespace AnimeDown
                 var next = downloadQueue.Dequeue();
                 SendToDownloadbot(next);
                 firstRun = false;
+                System.Console.WriteLine("Waiting to be sent first DCC request");
             }
         }
         public void SetDownloadDirectory(string path)

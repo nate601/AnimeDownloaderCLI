@@ -51,7 +51,7 @@ namespace AnimeDown
                 $"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(showNameShaken)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowNames(showNameShaken).First()} out." + "\n" +
                 "Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?\n",
                 DownloadMethodMap)(showNameShaken);
-
+            Console.ReadLine();
             await Task.Delay(-1);
         }
         private static string ChooseBotPrompt(List<HorribleSubsPacklist.ShowEntry> shows)
@@ -73,76 +73,76 @@ namespace AnimeDown
             return botNames[botNumber];
         }
 
-        private static void DownloadAllPrompt(List<HorribleSubsPacklist.ShowEntry> shows)
+        private static void DownloadAllPrompt(List<HorribleSubsPacklist.ShowEntry> downloadCandidates)
         {
-            List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry>();
-            Console.WriteLine($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes!");
-            string botName = ChooseBotPrompt(shows);
-            for (int i = 0; i <= HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows); i++)
+            List<HorribleSubsPacklist.ShowEntry> showsToDownload = new List<HorribleSubsPacklist.ShowEntry>();
+            Console.WriteLine($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates)} episodes!");
+            string botName = ChooseBotPrompt(downloadCandidates);
+            for (int i = 0; i <= HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates); i++)
             {
-                foreach (var show in shows)
+                foreach (var show in downloadCandidates)
                 {
                     if (int.Parse(show.episodeNumber) == i)
                     {
                         if (show.botName != botName)
                             continue;
-                        if (!shows.Where((entry => int.Parse(entry.episodeNumber) == i)).Any())
+                        if (!showsToDownload.Where((entry => int.Parse(entry.episodeNumber) == i)).Any())
                         {
-                            showOptions.Add(show);
+                            showsToDownload.Add(show);
                         }
                     }
                 }
             }
-            Download(showOptions);
+            Download(showsToDownload);
         }
-        private static void DownloadSomePrompt(List<HorribleSubsPacklist.ShowEntry> shows)
+        private static void DownloadSomePrompt(List<HorribleSubsPacklist.ShowEntry> downloadCandidates)
         {
         rangePrompt: var episodeRangeBegin =
            ReadNumber(
-               $"Which episode would you like the range to begin with?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows));
+               $"Which episode would you like the range to begin with?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates));
 
             var episodeRangeEnd =
                 ReadNumber(
-                    $"Which episode would you like the range to end with?", episodeRangeBegin, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows));
+                    $"Which episode would you like the range to end with?", episodeRangeBegin, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates));
             if (episodeRangeEnd <= episodeRangeBegin)
             {
                 Console.WriteLine("Episode range end must be greater than the beginning of the episode range!");
                 goto rangePrompt;
             }
-            List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry>();
-            var botName = ChooseBotPrompt(shows);
+            List<HorribleSubsPacklist.ShowEntry> showsToDownload = new List<HorribleSubsPacklist.ShowEntry>();
+            var botName = ChooseBotPrompt(downloadCandidates);
             for (int i = episodeRangeBegin; i <= episodeRangeEnd; i++)
             {
-                foreach (var show in shows)
+                foreach (var show in downloadCandidates)
                 {
                     if (show.botName != botName)
                         continue;
                     if (int.Parse(show.episodeNumber) == i)
                     {
-                        if (!showOptions.Where((entry => int.Parse(entry.episodeNumber) == i)).Any())
+                        if (!showsToDownload.Where((entry => int.Parse(entry.episodeNumber) == i)).Any())
                         {
-                            showOptions.Add(show);
+                            showsToDownload.Add(show);
                         }
                     }
                 }
             }
-            Download(showOptions);
+            Download(showsToDownload);
         }
-        private static void DownloadOnePrompt(List<HorribleSubsPacklist.ShowEntry> shows)
+        private static void DownloadOnePrompt(List<HorribleSubsPacklist.ShowEntry> downloadCandidates)
         {
-            var episodeNumber = ReadNumber("Which episode would you like to download?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows));
+            var episodeNumber = ReadNumber("Which episode would you like to download?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates));
 
-            List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry>();
-            foreach (var show in shows)
+            List<HorribleSubsPacklist.ShowEntry> showsToDownload = new List<HorribleSubsPacklist.ShowEntry>();
+            foreach (var show in downloadCandidates)
             {
                 if (int.Parse(show.episodeNumber) == episodeNumber)
                 {
-                    showOptions.Add(show);
+                    showsToDownload.Add(show);
                 }
 
             }
-            var botName = ChooseBotPrompt(showOptions);
-            var downloadShow = showOptions.First((b) => b.botName == botName);
+            var botName = ChooseBotPrompt(showsToDownload);
+            var downloadShow = showsToDownload.First((b) => b.botName == botName);
             Download(downloadShow);
 
         }
