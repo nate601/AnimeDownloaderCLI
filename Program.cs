@@ -12,8 +12,8 @@ namespace AnimeDown {
     class Program {
         private static readonly Lazy<DownloadHandler> handler = new Lazy<DownloadHandler> ();
         private static bool hasBegunDownload = false;
-        static void Main () {
 
+        static void Main () {
             Console.WriteLine ("Anime Downloader");
             Console.Write ("Anime Title:");
             var animeTitle = Console.ReadLine ();
@@ -81,32 +81,31 @@ namespace AnimeDown {
 
         }
 
-        private static void DownloadAllPrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
-            Console.WriteLine ($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes!");
-            List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
-
+        private static string PromptDownloadBot (List<HorribleSubsPacklist.ShowEntry> shows) {
             List<string> botNames = new List<string> ();
             foreach (var showEntry in shows) {
-                if (!botNames.Contains (showEntry.botName))
-                    botNames.Add (showEntry.botName);
+                if (!botNames.Contains (showEntry.botName)) { botNames.Add (showEntry.botName); }
             }
-
-            for (int botIndex = 0; botIndex < botNames.Count; botIndex++) {
-                Console.WriteLine (botIndex + " : " + botNames[botIndex]);
+            for (int i = 0; i < botNames.Count; i++) {
+                System.Console.WriteLine ($"{i} : {botNames[i]} [{(handler.Value.IsUserPresent(botNames[i])? "ONLINE" : "OFFLINE")}]");
             }
-
             var botNumber = ReadNumber ("Which bot would you like to download from?", botNames.Count);
+            return botNames[botNumber];
+        }
 
+        private static void DownloadAllPrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
+            List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
+            Console.WriteLine ($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes!");
+            string botName = PromptDownloadBot (shows);
             for (int i = 0; i <= HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows); i++) {
                 foreach (var show in shows) {
                     if (int.Parse (show.episodeNumber) == i) {
-                        if (show.botName != botNames[botNumber])
+                        if (show.botName != botName)
                             continue;
-                        if (!showOptions.Where ((entry => int.Parse (entry.episodeNumber) == i)).Any ()) {
+                        if (!shows.Where ((entry => int.Parse (entry.episodeNumber) == i)).Any ()) {
                             showOptions.Add (show);
                         }
                     }
-
                 }
             }
             Download (showOptions);
@@ -126,21 +125,11 @@ namespace AnimeDown {
             }
             List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
 
-            List<string> botNames = new List<string> ();
-            foreach (var showEntry in shows) {
-                if (!botNames.Contains (showEntry.botName))
-                    botNames.Add (showEntry.botName);
-            }
-
-            for (int botIndex = 0; botIndex < botNames.Count; botIndex++) {
-                Console.WriteLine (botIndex + " : " + botNames[botIndex]);
-            }
-
-            var botNumber = ReadNumber ("Which bot would you like to download from?", botNames.Count);
+            var botName = PromptDownloadBot (shows);
 
             for (int i = episodeRangeBegin; i <= episodeRangeEnd; i++) {
                 foreach (var show in shows) {
-                    if (show.botName != botNames[botNumber])
+                    if (show.botName != botName)
                         continue;
                     if (int.Parse (show.episodeNumber) == i) {
                         if (!showOptions.Where ((entry => int.Parse (entry.episodeNumber) == i)).Any ()) {
@@ -162,12 +151,9 @@ namespace AnimeDown {
                 }
 
             }
-            for (var index = 0; index < showOptions.Count; index++) {
-                var showOption = showOptions[index];
-                Console.WriteLine ($"{index} : {showOption.botName}");
-            }
-            var botNumber = ReadNumber ("Which bot would you like to download from?", showOptions.Count);
-            Download (showOptions[botNumber]);
+            var botName = PromptDownloadBot (showOptions);
+            var downloadShow = showOptions.First ((b) => b.botName == botName);
+            Download (downloadShow);
 
         }
 
