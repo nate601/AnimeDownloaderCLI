@@ -43,17 +43,15 @@ namespace AnimeDown {
                 default:
                     goto resolutionPrompt;
             }
-            Console.WriteLine ($"Searching for {animeTitle} on horribleSubs");
             HorribleSubsPacklist horrible = new HorribleSubsPacklist ();
             var shows = horrible.GetShow (animeTitle, resolutionEnum);
             var showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames (shows);
             Console.WriteLine ($"There are {showNamePossibilities.Count} results for {animeTitle} on horriblesubs.");
-            Console.WriteLine ("Which one would you like to download?");
             for (int i = 0; i < showNamePossibilities.Count; i++) {
                 string item = (string) showNamePossibilities[i];
                 Console.WriteLine ($"{i} : {item}");
             }
-            string showNameChosen = showNamePossibilities[ReadNumber ("", showNamePossibilities.Count)];
+            string showNameChosen = showNamePossibilities[ReadNumber ("Which one would you like to download?", showNamePossibilities.Count - 1)];
             List<HorribleSubsPacklist.ShowEntry> showNameShaken = HorribleSubsPacklist.ShowEntry.ShakeByShowName (showNameChosen, shows);
             prompt:
                 Console.WriteLine ($"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(showNameShaken)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowNames(showNameShaken).First()} out.");
@@ -74,21 +72,26 @@ namespace AnimeDown {
             }
             Console.ReadKey ();
         }
-        private static string PromptDownloadBot (List<HorribleSubsPacklist.ShowEntry> shows) {
+        private static string ChooseBotPrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             List<string> botNames = new List<string> ();
             foreach (var showEntry in shows) {
                 if (!botNames.Contains (showEntry.botName)) { botNames.Add (showEntry.botName); }
             }
             for (int i = 0; i < botNames.Count; i++) {
-                System.Console.WriteLine ($"{i} : {botNames[i]} [{(handler.Value.IsUserPresent(botNames[i])? "ONLINE" : "OFFLINE")}]");
+                bool v = handler.Value.IsUserPresent (botNames[i]);
+                Console.Write ($"{i} : ");
+                WriteInColor ($"{botNames[i]} [{(v ? "ON" : "OFF")}LINE]", v ? ConsoleColor.Green : ConsoleColor.Red);
+                Console.Write ("\n");
             }
-            var botNumber = ReadNumber ("Which bot would you like to download from?", botNames.Count);
+            var botNumber = ReadNumber ("Which bot would you like to download from?", botNames.Count - 1);
+
             return botNames[botNumber];
         }
+
         private static void DownloadAllPrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
             Console.WriteLine ($"Downloading all {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)} episodes!");
-            string botName = PromptDownloadBot (shows);
+            string botName = ChooseBotPrompt (shows);
             for (int i = 0; i <= HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows); i++) {
                 foreach (var show in shows) {
                     if (int.Parse (show.episodeNumber) == i) {
@@ -105,17 +108,17 @@ namespace AnimeDown {
         private static void DownloadSomePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
             rangePrompt : var episodeRangeBegin =
                 ReadNumber (
-                    $"Which episode would you like the range to begin with? (1-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + 1);
+                    $"Which episode would you like the range to begin with?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
 
             var episodeRangeEnd =
                 ReadNumber (
-                    $"Which episode would you like the range to end with? ({episodeRangeBegin}-{HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows)})", episodeRangeBegin, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + 1);
+                    $"Which episode would you like the range to end with?", episodeRangeBegin, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
             if (episodeRangeEnd <= episodeRangeBegin) {
                 Console.WriteLine ("Episode range end must be greater than the beginning of the episode range!");
                 goto rangePrompt;
             }
             List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
-            var botName = PromptDownloadBot (shows);
+            var botName = ChooseBotPrompt (shows);
             for (int i = episodeRangeBegin; i <= episodeRangeEnd; i++) {
                 foreach (var show in shows) {
                     if (show.botName != botName)
@@ -130,8 +133,7 @@ namespace AnimeDown {
             Download (showOptions);
         }
         private static void DownloadOnePrompt (List<HorribleSubsPacklist.ShowEntry> shows) {
-            var episodeNumber = ReadNumber ("Which episode would you like to download? (1-" +
-                HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows) + ")", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
+            var episodeNumber = ReadNumber ("Which episode would you like to download?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes (shows));
 
             List<HorribleSubsPacklist.ShowEntry> showOptions = new List<HorribleSubsPacklist.ShowEntry> ();
             foreach (var show in shows) {
@@ -140,7 +142,7 @@ namespace AnimeDown {
                 }
 
             }
-            var botName = PromptDownloadBot (showOptions);
+            var botName = ChooseBotPrompt (showOptions);
             var downloadShow = showOptions.First ((b) => b.botName == botName);
             Download (downloadShow);
 
@@ -156,7 +158,7 @@ namespace AnimeDown {
             DownloadHandler.DownloadPair pair = new DownloadHandler.DownloadPair (
                 entry.botName,
                 int.Parse (entry.packNumber),
-                $"{entry.PrettyTitle ()} Episode {entry.episodeNumber}"
+                $" { entry.PrettyTitle () } Episode { entry.episodeNumber }"
             );
             handler.Value.Download (pair);
         }
@@ -169,14 +171,14 @@ namespace AnimeDown {
         /// <summary>
         /// Prompts the operator for a number, and repeats the request if the number is invalid
         /// </summary>
-        /// <param name="prompt">The message with which to prompt the operator</param>
-        /// <param name="min">The minimum number that the operator must enter (inclusive)</param>
-        /// <param name="max">The maximum number that the operator must enter (exclusive)</param>
+        /// <param name="prompt ">The message with which to prompt the operator</param>
+        /// <param name="min ">The minimum number that the operator must enter (inclusive)</param>
+        /// <param name="max ">The maximum number that the operator must enter (exclusive)</param>
         /// <returns></returns>
         private static int ReadNumber (string prompt, int min, int max) {
             int result;
             while (true) {
-                Console.WriteLine (prompt);
+                Console.WriteLine ($"{ prompt } ({ min }-{ max })");
                 if (int.TryParse (Console.ReadLine (), out result) && result >= min && result < max)
                     break;
             }
@@ -186,9 +188,21 @@ namespace AnimeDown {
         /// <summary>
         /// Prompts the operator for a number, and repeats the request if the number is invalid
         /// </summary>
-        /// <param name="prompt">The message with which to prompt the operator</param>
-        /// <param name="max">The maximum number that the operator must enter (exclusive)</param>
+        /// <param name="prompt ">The message with which to prompt the operator</param>
+        /// <param name="max ">The maximum number that the operator must enter (exclusive)</param>
         /// <returns></returns>
         private static int ReadNumber (string prompt, int max) => ReadNumber (prompt, 0, max);
+        /// <summary>
+        /// Writes a string to the console, in the foreground color
+        /// </summary>
+        /// <param name="writable">The string to write to the console</param>
+        /// <param name="color">The foreground color to write in</param>
+        private static void WriteInColor (string writable, ConsoleColor color) {
+            ConsoleColor oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.Write (writable);
+            Console.ForegroundColor = oldColor;
+        }
+
     }
 }
