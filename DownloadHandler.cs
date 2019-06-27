@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using SimpleIRCLib;
 
 namespace AnimeDown {
-    public class DownloadHandler {
+    public partial class DownloadHandler {
         private const string COMPLETED_STATUS = "COMPLETED";
         private const string RIZON_IRC_SERVER_HOST = "irc.rizon.net";
         private const int RIZON_IRC_SERVER_PORT = 6697;
@@ -94,17 +94,6 @@ namespace AnimeDown {
                 SendToDownloadbot (next);
                 firstRun = false;
             }
-        }
-        public struct DownloadPair {
-            public DownloadPair (string botName, int packNumber, string displayTitle) {
-                this.BotName = botName;
-                this.PackNumber = packNumber;
-                this.DisplayTitle = displayTitle;
-            }
-            public string BotName { get; set; }
-            public int PackNumber { get; set; }
-            public string DisplayTitle { get; set; }
-
         }
         public void SetDownloadDirectory (string path) {
             irc.SetCustomDownloadDir (path);

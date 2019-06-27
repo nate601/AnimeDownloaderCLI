@@ -48,11 +48,5 @@ public partial class HorribleSubsPacklist {
         return showVerified;
 
     }
-    public enum Quality {
-        TEN_EIGHTY_P,
-        SEVEN_TWENTY_P,
-        STANDARD_DEFINITION,
-
-    }
 
 }
