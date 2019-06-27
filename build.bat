@@ -1,3 +1,15 @@
+REM Nathan Button
+
+REM The build.bat creates a build on (win/linux/osx)-x64, packs it into a
+REM single executable using warp-packer, and then zips it into a 7z file
+REM using 7zip.
+
+REM To use this script the build computer must have the dotnet core sdk,
+REM warp-packer, and 7zip installed.
+
+REM After running this command the results will be in
+REM bin/release/netcoreapp2.2
+
 dotnet publish -r win-x64 --self-contained true -c Release
 dotnet publish -r linux-x64 --self-contained true -c Release
 dotnet publish -r osx-x64 --self-contained true -c Release
