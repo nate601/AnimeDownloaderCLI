@@ -84,7 +84,6 @@ namespace AnimeDown
                 )
                 .ToArray();
         }
-
         private void DownloadStatusChanged(object sender, DCCEventArgs args)
         {
             Console.Clear();
@@ -100,10 +99,10 @@ namespace AnimeDown
             }
             if (args.Status == COMPLETED_STATUS && downloadQueue.Count == 0)
             {
-                Console.WriteLine("Download completed. Press any key to exit.");
+                Console.WriteLine("Download completed.");
+                Console.Title = "Download completed";
             }
         }
-
         private void SendToDownloadbot(DownloadPair pair)
         {
             irc.SendMessageToChannel($@"/msg {pair.BotName} xdcc send #{pair.PackNumber.ToString()}", RIZON_IRC_CHANNEL_NAME);
