@@ -127,7 +127,7 @@ namespace AnimeDown
                 }
             }
             Download(showOptions);
-        }
+       }
         private static void DownloadOnePrompt(List<HorribleSubsPacklist.ShowEntry> shows)
         {
             var episodeNumber = ReadNumber("Which episode would you like to download?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows));

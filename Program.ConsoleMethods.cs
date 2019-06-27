@@ -54,7 +54,7 @@ namespace AnimeDown
             while (true)
             {
                 Console.WriteLine($"{ prompt } ({ min }-{ max })");
-                if (int.TryParse(Console.ReadLine(), out result) && result >= min && result < max)
+                if (int.TryParse(Console.ReadLine(), out result) && result >= min && result <= max)
                     break;
             }
 
