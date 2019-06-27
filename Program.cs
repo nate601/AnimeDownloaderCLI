@@ -26,7 +26,7 @@ namespace AnimeDown
                 { ConsoleKey.NumPad1, HorribleSubsPacklist.Quality.SEVEN_TWENTY_P },
                 { ConsoleKey.NumPad2, HorribleSubsPacklist.Quality.STANDARD_DEFINITION },
             };
-            var resolutionEnum = ExecuteOnButtonPress("Resolution:\n0:1080p\n1:720p\n2:SD\n", resolutionMap);
+            var resolutionEnum = ReadKeyMap("Resolution:\n0:1080p\n1:720p\n2:SD\n", resolutionMap);
 
 
             HorribleSubsPacklist horrible = new HorribleSubsPacklist();
@@ -46,7 +46,7 @@ namespace AnimeDown
                 {ConsoleKey.S, DownloadSomePrompt},
                 {ConsoleKey.O, DownloadOnePrompt},
             };
-            ExecuteOnButtonPress(
+            ReadKeyMap(
                 $"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(showNameShaken)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowNames(showNameShaken).First()} out." + "\n" +
                 "Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?\n",
                 DownloadMethodMap)(showNameShaken);
@@ -209,14 +209,21 @@ namespace AnimeDown
             Console.Write(writable);
             Console.ForegroundColor = oldColor;
         }
-        public static T ExecuteOnButtonPress<T>(string prompt, Dictionary<ConsoleKey, T> possibleKeys)
+        /// <summary>
+        /// Prompts the user for a keypress, and maps that keypress to an object
+        /// </summary>
+        /// <param name="prompt">The message to show to the user.  Does not automaticaly append a newline to the end of the string</param>
+        /// <param name="consoleKeyMap">The map between the console keys and the result</param>
+        /// <typeparam name="T">The type of the return value</typeparam>
+        /// <returns></returns>
+        public static T ReadKeyMap<T>(string prompt, Dictionary<ConsoleKey, T> consoleKeyMap)
         {
             while (true)
             {
                 Console.Write(prompt);
                 var key = Console.ReadKey(true);
-                if (possibleKeys.ContainsKey(key.Key))
-                    return possibleKeys[key.Key];
+                if (consoleKeyMap.ContainsKey(key.Key))
+                    return consoleKeyMap[key.Key];
             }
         }
     }
