@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 public partial class HorribleSubsPacklist
@@ -21,6 +22,23 @@ public partial class HorribleSubsPacklist
 
             return episodeNumbers;
         }
+        public static Dictionary<string, Quality[]> GetShowQualities(List<ShowEntry> shows)
+        {
+            var dic = new Dictionary<string, Quality[]>();
+            var names = GetShowNames(shows);
+            foreach (var name in names)
+            {
+                List<Quality> qualities = new List<Quality>();
+
+                foreach (var show in shows.Where((x) => x.PrettyTitle() == name))
+                {
+                    if (!qualities.Contains(show.episodeQuality))
+                        qualities.Add(show.episodeQuality);
+                }
+                dic.Add(name, qualities.ToArray());
+            }
+            return dic;
+        }
 
         public static List<string> GetShowNames(List<ShowEntry> shows)
         {
@@ -40,6 +58,7 @@ public partial class HorribleSubsPacklist
         public string sizeInMb;
         public string Title;
         public string episodeNumber;
+        public Quality episodeQuality;
 
         public ShowEntry(string lineEntry)
         {
@@ -58,6 +77,25 @@ public partial class HorribleSubsPacklist
             var regexNumberMatches = episodeNumberMatcher.Match(Title);
             episodeNumber = regexNumberMatches.Groups[1].Value;
 
+            if (lineEntry.Contains("1080p"))
+            {
+                episodeQuality = Quality.TEN_EIGHTY_P;
+            }
+            else if (lineEntry.Contains("720p"))
+            {
+                episodeQuality = Quality.SEVEN_TWENTY_P;
+            }
+            else
+            {
+                episodeQuality = Quality.STANDARD_DEFINITION;
+            }
+        }
+
+        internal static List<ShowEntry> ShakeByShowQuality(Quality chosenQuality, List<ShowEntry> shows)
+        {
+            List<ShowEntry> retVal = new List<ShowEntry>();
+            retVal = shows.Where((x) => x.episodeQuality == chosenQuality).ToList();
+            return retVal;
         }
 
         public bool Verify()

@@ -91,7 +91,8 @@ namespace AnimeDown
             Console.WriteLine($"{args.Progress}%");
             Console.WriteLine($"{downloadQueue.Count + 1} files remaining");
             Console.Title = $"{downloadQueue.Count + 1} files remaining";
-            System.Console.WriteLine(string.Join('\n', downloadQueue.Select((downloadPair) => $"{downloadPair.DisplayTitle}\n>{downloadPair.BotName} : {downloadPair.PackNumber}")));
+            Console.WriteLine();
+            System.Console.WriteLine(string.Join('\n', downloadQueue.Select((downloadPair) => $"{downloadPair.DisplayTitle}\n :{downloadPair.BotName} : {downloadPair.PackNumber}")));
             if (args.Status == COMPLETED_STATUS && downloadQueue.Count != 0)
             {
                 var next = downloadQueue.Dequeue();

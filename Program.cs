@@ -14,33 +14,38 @@ namespace AnimeDown
         // ? is implemented this is slightly pointless
         private static readonly Lazy<DownloadHandler> handler = new Lazy<DownloadHandler>();
         private static bool hasBegunDownload = false;
-        static async Task Main()
+        static void Main()
         {
             Console.WriteLine("Anime Downloader");
             Console.Write("Anime Title:");
             var animeTitle = Console.ReadLine();
-            var resolutionMap = new Dictionary<ConsoleKey, HorribleSubsPacklist.Quality>() {
-                { ConsoleKey.D0, HorribleSubsPacklist.Quality.TEN_EIGHTY_P },
-                { ConsoleKey.D1, HorribleSubsPacklist.Quality.SEVEN_TWENTY_P },
-                { ConsoleKey.D2, HorribleSubsPacklist.Quality.STANDARD_DEFINITION },
-                { ConsoleKey.NumPad0, HorribleSubsPacklist.Quality.TEN_EIGHTY_P },
-                { ConsoleKey.NumPad1, HorribleSubsPacklist.Quality.SEVEN_TWENTY_P },
-                { ConsoleKey.NumPad2, HorribleSubsPacklist.Quality.STANDARD_DEFINITION },
-            };
-            var resolutionEnum = ReadKeyMap("Resolution:\n0:1080p\n1:720p\n2:SD\n", resolutionMap);
 
 
             HorribleSubsPacklist horrible = new HorribleSubsPacklist();
-            var shows = horrible.GetShow(animeTitle, resolutionEnum);
+            var shows = horrible.GetShow(animeTitle);
             var showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames(shows);
+            var getShowQualities = HorribleSubsPacklist.ShowEntry.GetShowQualities(shows);
             Console.WriteLine($"There are {showNamePossibilities.Count} results for {animeTitle} on horriblesubs.");
             for (int i = 0; i < showNamePossibilities.Count; i++)
             {
                 string item = (string)showNamePossibilities[i];
                 Console.WriteLine($"{i} : {item}");
+                WriteInColor($"[1080p]",
+                    getShowQualities[item].Contains(HorribleSubsPacklist.Quality.TEN_EIGHTY_P) ? ConsoleColor.Green : ConsoleColor.Red);
+
+                WriteInColor($"[720p]",
+                    getShowQualities[item].Contains(HorribleSubsPacklist.Quality.SEVEN_TWENTY_P) ? ConsoleColor.Green : ConsoleColor.Red);
+                WriteInColor($"[SD]",
+                    getShowQualities[item].Contains(HorribleSubsPacklist.Quality.STANDARD_DEFINITION) ? ConsoleColor.Green : ConsoleColor.Red);
+                System.Console.WriteLine();
             }
             string showNameChosen = showNamePossibilities[ReadNumber("Which one would you like to download?", showNamePossibilities.Count - 1)];
-            List<HorribleSubsPacklist.ShowEntry> showNameShaken = HorribleSubsPacklist.ShowEntry.ShakeByShowName(showNameChosen, shows);
+            List<HorribleSubsPacklist.ShowEntry> showsShakenByName = HorribleSubsPacklist.ShowEntry.ShakeByShowName(showNameChosen, shows);
+            HorribleSubsPacklist.Quality[] possibleQualities = getShowQualities[showNameChosen];
+
+            HorribleSubsPacklist.Quality chosenQuality = ChooseQualityPrompt(possibleQualities);
+            List<HorribleSubsPacklist.ShowEntry> showsShakenByQuality = HorribleSubsPacklist.ShowEntry.ShakeByShowQuality(chosenQuality, showsShakenByName);
+
 
             var DownloadMethodMap = new Dictionary<ConsoleKey, Action<List<HorribleSubsPacklist.ShowEntry>>>(){
                 {ConsoleKey.A, DownloadAllPrompt},
@@ -48,11 +53,20 @@ namespace AnimeDown
                 {ConsoleKey.O, DownloadOnePrompt},
             };
             ReadKeyMap(
-                $"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(showNameShaken)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowNames(showNameShaken).First()} out." + "\n" +
+                $"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(showsShakenByQuality)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowNames(showsShakenByQuality).First()} out." + "\n" +
                 "Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?\n",
-                DownloadMethodMap)(showNameShaken);
+                DownloadMethodMap)(showsShakenByQuality);
             Console.ReadLine();
-            await Task.Delay(-1);
+        }
+
+        private static HorribleSubsPacklist.Quality ChooseQualityPrompt(HorribleSubsPacklist.Quality[] possibleQualities)
+        {
+            for (int i = 0; i < possibleQualities.Length; i++)
+            {
+                System.Console.WriteLine($"{i} : {possibleQualities[i]}");
+            }
+            var qualNum = ReadNumber("What quality would you like to download?", possibleQualities.Length);
+            return possibleQualities[qualNum];
         }
         private static string ChooseBotPrompt(List<HorribleSubsPacklist.ShowEntry> shows)
         {
