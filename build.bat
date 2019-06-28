@@ -1,3 +1,5 @@
+@echo off
+
 REM Nathan Button
 
 REM The build.bat creates a build on (win/linux/osx)-x64, packs it into a
@@ -22,7 +24,23 @@ warp-packer -a macos-x64 -i osx-x64\publish\ -e AnimeDownloaderCLI -o AnimeDownl
 7z a win-x64 AnimeDownloaderCLI.exe
 7z a linux-x64 AnimeDownloaderCLILinux
 7z a osx-x64 AnimeDownloaderCLIOsx
-dir
+rm -rf win-x64
+rm -rf linux-x64
+rm -rf osx-x64
+rm AnimeDownloaderCLI.exe
+rm AnimeDownloaderCLILinux
+rm AnimeDownloaderCLIOsx
 cd ..
 cd ..
 cd ..
+dotnet publish -r win-x64 --self-contained false -c Release
+cd bin
+cd Release
+cd netcoreapp2.2
+warp-packer -a windows-x64 -i win-x64\publish\ -e AnimeDownloaderCLI.exe -o AnimeDownloaderCLI.exe
+7z a win-x64-framework-dependent AnimeDownloader.exe
+rm AnimeDownloader.exe
+cd ..
+cd ..
+cd ..
+echo "Completed."
