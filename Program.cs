@@ -41,9 +41,11 @@ namespace AnimeDown
             }
             string showNameChosen = showNamePossibilities[ReadNumber("Which one would you like to download?", showNamePossibilities.Count - 1)];
             List<HorribleSubsPacklist.ShowEntry> showsShakenByName = HorribleSubsPacklist.ShowEntry.ShakeByShowName(showNameChosen, shows);
-            HorribleSubsPacklist.Quality[] possibleQualities = getShowQualities[showNameChosen];
+            List<HorribleSubsPacklist.Quality> possibleQualities = getShowQualities[showNameChosen].ToList();
+            possibleQualities.Sort();
 
-            HorribleSubsPacklist.Quality chosenQuality = ChooseQualityPrompt(possibleQualities);
+
+            HorribleSubsPacklist.Quality chosenQuality = ChooseQualityPrompt(possibleQualities.ToArray());
             List<HorribleSubsPacklist.ShowEntry> showsShakenByQuality = HorribleSubsPacklist.ShowEntry.ShakeByShowQuality(chosenQuality, showsShakenByName);
 
 
@@ -61,9 +63,14 @@ namespace AnimeDown
 
         private static HorribleSubsPacklist.Quality ChooseQualityPrompt(HorribleSubsPacklist.Quality[] possibleQualities)
         {
+            var qualityPrettyMap = new Dictionary<HorribleSubsPacklist.Quality, string>(){
+              {HorribleSubsPacklist.Quality.TEN_EIGHTY_P, "1080p"},
+              {HorribleSubsPacklist.Quality.SEVEN_TWENTY_P, "720p"},
+              {HorribleSubsPacklist.Quality.STANDARD_DEFINITION, "SD"},
+            };
             for (int i = 0; i < possibleQualities.Length; i++)
             {
-                System.Console.WriteLine($"{i} : {possibleQualities[i]}");
+                System.Console.WriteLine($"{i} : {qualityPrettyMap[possibleQualities[i]]}");
             }
             var qualNum = ReadNumber("What quality would you like to download?", possibleQualities.Length);
             return possibleQualities[qualNum];
