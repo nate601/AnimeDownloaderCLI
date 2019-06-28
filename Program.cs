@@ -28,7 +28,7 @@ namespace AnimeDown
             Console.WriteLine($"There are {showNamePossibilities.Count} results for {animeTitle} on horriblesubs.");
             for (int i = 0; i < showNamePossibilities.Count; i++)
             {
-                string item = (string)showNamePossibilities[i];
+                string item = showNamePossibilities[i];
                 Console.WriteLine($"{i} : {item}");
                 WriteInColor($"[1080p]",
                     getShowQualities[item].Contains(HorribleSubsPacklist.Quality.TEN_EIGHTY_P) ? ConsoleColor.Green : ConsoleColor.Red);
