@@ -72,7 +72,7 @@ namespace AnimeDown
             {
                 System.Console.WriteLine($"{i} : {qualityPrettyMap[possibleQualities[i]]}");
             }
-            var qualNum = ReadNumber("What quality would you like to download?", possibleQualities.Length);
+            var qualNum = ReadNumber("What quality would you like to download?", possibleQualities.Length - 1);
             return possibleQualities[qualNum];
         }
         private static string ChooseBotPrompt(List<HorribleSubsPacklist.ShowEntry> shows)
