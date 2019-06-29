@@ -40,6 +40,23 @@ public partial class HorribleSubsPacklist
             return dic;
         }
 
+        public static List<List<ShowEntry>> GetShowsSeperated(List<ShowEntry> shows)
+        {
+            List<List<ShowEntry>> retVal = new List<List<ShowEntry>>();
+            foreach (var show in shows)
+            {
+                if (!retVal.Any(x => x.Any(y => y.PrettyTitle() == show.PrettyTitle())))
+                {
+                    retVal.Add(new List<ShowEntry>() { show });
+                }
+                else
+                {
+                    retVal.First(x => x.Any(y => y.PrettyTitle() == show.PrettyTitle())).Add(show);
+                }
+            }
+            return retVal;
+        }
+
         public static List<string> GetShowNames(List<ShowEntry> shows)
         {
             List<string> showNames = new List<string>();
