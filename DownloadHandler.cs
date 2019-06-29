@@ -111,8 +111,8 @@ namespace AnimeDown
 
         private void PostDownload(string fileName)
         {
-            string modifiedFileName = Regex.Replace(fileName, @"\s?(\[.*\])\s?", "");
-            modifiedFileName = Regex.Replace(modifiedFileName, @"(-\s)", "- Episode");
+            string modifiedFileName = Regex.Replace(fileName, @"\s?(\[.*?\])\s?", "");
+            modifiedFileName = Regex.Replace(modifiedFileName, @"(-\s)", "- Episode ");
             File.Move(Path.Combine(downloadDirectory, fileName), Path.Combine(downloadDirectory, modifiedFileName));
         }
         private void SendToDownloadbot(DownloadPair pair)
