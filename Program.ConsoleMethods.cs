@@ -9,7 +9,7 @@ namespace AnimeDown
         /// Prompts the operator for a number, and repeats the request if the number is invalid
         /// </summary>
         /// <param name="prompt ">The message with which to prompt the operator</param>
-        /// <param name="max ">The maximum number that the operator must enter (exclusive)</param>
+        /// <param name="max ">The maximum number that the operator must enter (inclusive)</param>
         /// <returns></returns>
         private static int ReadNumber(string prompt, int max) => ReadNumber(prompt, 0, max);
         /// <summary>
@@ -46,7 +46,7 @@ namespace AnimeDown
         /// </summary>
         /// <param name="prompt ">The message with which to prompt the operator</param>
         /// <param name="min ">The minimum number that the operator must enter (inclusive)</param>
-        /// <param name="max ">The maximum number that the operator must enter (exclusive)</param>
+        /// <param name="max ">The maximum number that the operator must enter (inclusive)</param>
         /// <returns></returns>
         private static int ReadNumber(string prompt, int min, int max)
         {
