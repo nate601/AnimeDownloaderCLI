@@ -118,17 +118,27 @@ namespace AnimeDown
         }
         private static void DownloadSomePrompt(List<HorribleSubsPacklist.ShowEntry> downloadCandidates)
         {
-        rangePrompt: var episodeRangeBegin =
-           ReadNumber(
-               $"Which episode would you like the range to begin with?", 1, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates));
-
-            var episodeRangeEnd =
-                ReadNumber(
-                    $"Which episode would you like the range to end with?", episodeRangeBegin, HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates));
-            if (episodeRangeEnd <= episodeRangeBegin)
+            int episodeRangeBegin;
+            int episodeRangeEnd;
+            while (true)
             {
-                Console.WriteLine("Episode range end must be greater than the beginning of the episode range!");
-                goto rangePrompt;
+                episodeRangeBegin =
+                    ReadNumber(
+                        $"Which episode would you like the range to begin with?",
+                        1,
+                        HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates)
+                    );
+                episodeRangeEnd =
+                    ReadNumber(
+                        $"Which episode would you like the range to end with?",
+                        episodeRangeBegin,
+                        HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(downloadCandidates)
+                    );
+                if (episodeRangeEnd <= episodeRangeBegin)
+                {
+                    Console.WriteLine("Episode range end must be greater than the beginning of the episode range!");
+                }
+                else { break; }
             }
             List<HorribleSubsPacklist.ShowEntry> showsToDownload = new List<HorribleSubsPacklist.ShowEntry>();
             var botName = ChooseBotPrompt(downloadCandidates);
