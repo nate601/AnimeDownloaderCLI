@@ -59,21 +59,20 @@ public partial class HorribleSubsPacklist
         public string Title;
         public string episodeNumber;
         public Quality episodeQuality;
-
+        static readonly Regex nameMatcher = new Regex("(?:b:\"|f:\")([^\"]*)");
+        static readonly Regex packNumberMatcher = new Regex(@"n:(\d*)");
+        static readonly Regex sizeNumberMatcher = new Regex(@"s:(\d*)");
+        static readonly Regex episodeNumberMatcher = new Regex(@"(?:- )(\d*)");
         public ShowEntry(string lineEntry)
         {
 
-            Regex nameMatcher = new Regex("(?:b:\"|f:\")([^\"]*)"); //Match 0 group 1 = bot name
             var nameMatches = nameMatcher.Match(lineEntry);
             botName = nameMatches.Groups[1].Value;
             Title = nameMatches.NextMatch().Groups[1].Value;
-            Regex packNumberMatcher = new Regex(@"n:(\d*)");
             var packnumberMatches = packNumberMatcher.Match(lineEntry);
             packNumber = packnumberMatches.Groups[1].ToString();
-            Regex sizeNumberMatcher = new Regex(@"s:(\d*)");
             var sizeNumberMatches = sizeNumberMatcher.Match(lineEntry);
             sizeInMb = sizeNumberMatches.Groups[1].Value;
-            Regex episodeNumberMatcher = new Regex(@"(?:- )(\d*)");
             var regexNumberMatches = episodeNumberMatcher.Match(Title);
             episodeNumber = regexNumberMatches.Groups[1].Value;
 
@@ -90,14 +89,12 @@ public partial class HorribleSubsPacklist
                 episodeQuality = Quality.STANDARD_DEFINITION;
             }
         }
-
         internal static List<ShowEntry> ShakeByShowQuality(Quality chosenQuality, List<ShowEntry> shows)
         {
             List<ShowEntry> retVal = new List<ShowEntry>();
             retVal = shows.Where((x) => x.episodeQuality == chosenQuality).ToList();
             return retVal;
         }
-
         public bool Verify()
         {
             return botName != "" && packNumber != "" && sizeInMb != "" && Title != "" && episodeNumber != "";
@@ -107,7 +104,6 @@ public partial class HorribleSubsPacklist
             Regex titlePrettifier = new Regex("(.+)(?: -)");
             return titlePrettifier.Match(Title).Groups[1].Value.Split(']')[1].TrimStart(' ');
         }
-
         [Conditional("DEBUG")]
         public void PrettyPrint()
         {
@@ -117,7 +113,6 @@ public partial class HorribleSubsPacklist
             Console.WriteLine("├─" + packNumber);
             Console.WriteLine("└─" + sizeInMb + " megabytes");
         }
-
         internal static List<ShowEntry> ShakeByShowName(string showNameChosen, List<ShowEntry> shows)
         {
             List<ShowEntry> retVal = new List<ShowEntry>();
@@ -130,5 +125,4 @@ public partial class HorribleSubsPacklist
             return retVal;
         }
     }
-
 }
