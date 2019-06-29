@@ -22,23 +22,14 @@ namespace AnimeDown
 
 
             HorribleSubsPacklist horrible = new HorribleSubsPacklist();
+
             var shows = horrible.GetShow(animeTitle);
             var showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames(shows);
             var getShowQualities = HorribleSubsPacklist.ShowEntry.GetShowQualities(shows);
-            Console.WriteLine($"There are {showNamePossibilities.Count} results for {animeTitle} on horriblesubs.");
-            for (int i = 0; i < showNamePossibilities.Count; i++)
-            {
-                string item = showNamePossibilities[i];
-                Console.WriteLine($"{i} : {item}");
-                WriteInColor($"[1080p]",
-                    getShowQualities[item].Contains(HorribleSubsPacklist.Quality.TEN_EIGHTY_P) ? ConsoleColor.Green : ConsoleColor.Red);
+            var sortedShows = HorribleSubsPacklist.ShowEntry.GetShowsSeperated(shows);
 
-                WriteInColor($"[720p]",
-                    getShowQualities[item].Contains(HorribleSubsPacklist.Quality.SEVEN_TWENTY_P) ? ConsoleColor.Green : ConsoleColor.Red);
-                WriteInColor($"[SD]",
-                    getShowQualities[item].Contains(HorribleSubsPacklist.Quality.STANDARD_DEFINITION) ? ConsoleColor.Green : ConsoleColor.Red);
-                System.Console.WriteLine();
-            }
+            PrintShowNamesTable(sortedShows, showNamePossibilities, animeTitle);
+
             string showNameChosen = showNamePossibilities[ReadNumber("Which one would you like to download?", showNamePossibilities.Count - 1)];
             List<HorribleSubsPacklist.ShowEntry> showsShakenByName = HorribleSubsPacklist.ShowEntry.ShakeByShowName(showNameChosen, shows);
             List<HorribleSubsPacklist.Quality> possibleQualities = getShowQualities[showNameChosen].ToList();
@@ -59,6 +50,29 @@ namespace AnimeDown
                 "Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?\n",
                 DownloadMethodMap)(showsShakenByQuality);
             Console.ReadLine();
+        }
+
+        private static void PrintShowNamesTable(List<List<HorribleSubsPacklist.ShowEntry>> sortedShows, List<string> showNamePossibilities, string animeTitle)
+        {
+            Console.Clear();
+            Console.WriteLine($"There are {showNamePossibilities.Count} results for \"{animeTitle}\" on horriblesubs.\n");
+
+            System.Console.WriteLine($"{"Index",-5} : {"Show Title",-45} {"Number of Episodes",-18} {"Quality",-8}");
+            for (int i = 0; i < sortedShows.Count; i++)
+            {
+                List<HorribleSubsPacklist.ShowEntry> item = sortedShows[i];
+                string showName = HorribleSubsPacklist.ShowEntry.GetShowNames(item).First();
+                var qualities = HorribleSubsPacklist.ShowEntry.GetShowQualities(item)[showName];
+                System.Console.Write($"{i,5} : {showName,-45} {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(item),-18} ");
+                WriteInColor($"[1080p]",
+                    qualities.Contains(HorribleSubsPacklist.Quality.TEN_EIGHTY_P) ? ConsoleColor.Green : ConsoleColor.Red);
+                WriteInColor($"[720p]",
+                    qualities.Contains(HorribleSubsPacklist.Quality.SEVEN_TWENTY_P) ? ConsoleColor.Green : ConsoleColor.Red);
+                WriteInColor($"[SD]",
+                    qualities.Contains(HorribleSubsPacklist.Quality.STANDARD_DEFINITION) ? ConsoleColor.Green : ConsoleColor.Red);
+                Console.Write("\n");
+            }
+            Console.WriteLine();
         }
 
         private static HorribleSubsPacklist.Quality ChooseQualityPrompt(HorribleSubsPacklist.Quality[] possibleQualities)
