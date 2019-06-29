@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SimpleIRCLib;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace AnimeDown
 {
@@ -96,13 +98,22 @@ namespace AnimeDown
             if (args.Status == COMPLETED_STATUS && downloadQueue.Count != 0)
             {
                 var next = downloadQueue.Dequeue();
+                PostDownload(args.FileName);
                 SendToDownloadbot(next);
             }
             if (args.Status == COMPLETED_STATUS && downloadQueue.Count == 0)
             {
                 Console.WriteLine("Download completed.");
                 Console.Title = "Download completed";
+                PostDownload(args.FileName);
             }
+        }
+
+        private void PostDownload(string fileName)
+        {
+            string modifiedFileName = Regex.Replace(fileName, @"\s?(\[.*\])\s?", "");
+            modifiedFileName = Regex.Replace(modifiedFileName, @"(-\s)", "- Episode");
+            File.Move(Path.Combine(downloadDirectory, fileName), Path.Combine(downloadDirectory, modifiedFileName));
         }
         private void SendToDownloadbot(DownloadPair pair)
         {
@@ -120,8 +131,10 @@ namespace AnimeDown
                 System.Console.WriteLine("Waiting to be sent first DCC request");
             }
         }
+        string downloadDirectory;
         public void SetDownloadDirectory(string path)
         {
+            downloadDirectory = path;
             irc.SetCustomDownloadDir(path);
         }
     }
