@@ -57,7 +57,6 @@ namespace AnimeDown
                 if (int.TryParse(Console.ReadLine(), out result) && result >= min && result <= max)
                     break;
             }
-
             return result;
         }
     }
