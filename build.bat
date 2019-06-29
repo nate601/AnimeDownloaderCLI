@@ -40,6 +40,8 @@ cd netcoreapp2.2
 warp-packer -a windows-x64 -i win-x64\publish\ -e AnimeDownloaderCLI.exe -o AnimeDownloaderCLI.exe
 7z a win-x64-framework-dependent AnimeDownloaderCLI.exe
 rm AnimeDownloaderCLI.exe
+rm -rf win-x64
+dir
 cd ..
 cd ..
 cd ..
