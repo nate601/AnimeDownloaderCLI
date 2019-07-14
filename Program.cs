@@ -24,6 +24,13 @@ namespace AnimeDown
             HorribleSubsPacklist horrible = new HorribleSubsPacklist();
 
             var shows = horrible.GetShow(animeTitle);
+            if (shows.Count == 0)
+            {
+                Console.WriteLine("Unfortunately, this anime is either not spelled correctly, or not subbed by HorribleSubs.");
+                Console.WriteLine("Try another source for this anime!");
+                Console.ReadLine();
+                return;
+            }
             var showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames(shows);
             var getShowQualities = HorribleSubsPacklist.ShowEntry.GetShowQualities(shows);
             var sortedShows = HorribleSubsPacklist.ShowEntry.GetShowsSeperated(shows);
