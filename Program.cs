@@ -110,9 +110,9 @@ namespace AnimeDown
             }
             for (int i = 0; i < botNames.Count; i++)
             {
-                bool v = handler.Value.IsUserPresent(botNames[i]);
+                bool botIsOnline = handler.Value.IsUserPresent(botNames[i]);
                 Console.Write($"{i} : ");
-                WriteInColor($"{botNames[i]} [{(v ? "ON" : "OFF")}LINE]", v ? ConsoleColor.Green : ConsoleColor.Red);
+                WriteInColor($"{botNames[i]} [{(botIsOnline ? "ON" : "OFF")}LINE]", botIsOnline ? ConsoleColor.Green : ConsoleColor.Red);
                 Console.Write("\n");
 		Console.WriteLine($"::Episode Count {botNameShowCount[botNames[i]]}");
             }
