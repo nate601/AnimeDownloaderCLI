@@ -99,9 +99,14 @@ namespace AnimeDown
         private static string ChooseBotPrompt(List<HorribleSubsPacklist.ShowEntry> shows)
         {
             List<string> botNames = new List<string>();
+	    Dictionary<string, int> botNameShowCount = new Dictionary<string, int>();
             foreach (var showEntry in shows)
             {
-                if (!botNames.Contains(showEntry.botName)) { botNames.Add(showEntry.botName); }
+                if (!botNames.Contains(showEntry.botName)) { 
+		    botNameShowCount.Add(showEntry.botName, 0);
+		    botNames.Add(showEntry.botName);
+		}
+		botNameShowCount[showEntry.botName]++;
             }
             for (int i = 0; i < botNames.Count; i++)
             {
@@ -109,6 +114,7 @@ namespace AnimeDown
                 Console.Write($"{i} : ");
                 WriteInColor($"{botNames[i]} [{(v ? "ON" : "OFF")}LINE]", v ? ConsoleColor.Green : ConsoleColor.Red);
                 Console.Write("\n");
+		Console.WriteLine($"::Episode Count {botNameShowCount[botNames[i]]}");
             }
             var botNumber = ReadNumber("Which bot would you like to download from?", botNames.Count - 1);
 
@@ -223,7 +229,6 @@ namespace AnimeDown
                 Download(showEntry);
             }
         }
-
 
     }
 }
