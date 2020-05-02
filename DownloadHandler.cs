@@ -101,14 +101,27 @@ namespace AnimeDown
         {
             Console.Clear();
             Console.WriteLine($"Current File: {args.FileName} ");
+            //Display progress for current file
             Console.WriteLine($"{args.Progress}%");
+            Console.WriteLine();
+            Console.Write("|");
+            for (int i = 0; i <= args.Progress; i++)
+            {
+                Console.Write("%");
+            }
+            for (int i = args.Progress; i < 100; i++)
+            {
+                Console.Write(" ");
+            }
+            Console.Write("|");
+            Console.WriteLine();
             Console.WriteLine($"{downloadQueue.Count + 1} files remaining");
             Console.Title = $"{downloadQueue.Count + 1} files remaining";
             Console.WriteLine();
-            System.Console.WriteLine(string.Join('\n', downloadQueue.Select((downloadPair) => $"{downloadPair.DisplayTitle}\n :{downloadPair.BotName} : {downloadPair.PackNumber}")));
+            Console.WriteLine(string.Join('\n', downloadQueue.Select((downloadPair) => $"{downloadPair.DisplayTitle}\n :{downloadPair.BotName} : {downloadPair.PackNumber}")));
             if (args.Status == COMPLETED_STATUS && downloadQueue.Count != 0)
             {
-                var next = downloadQueue.Dequeue();
+                DownloadPair next = downloadQueue.Dequeue();
                 PostDownload(args.FileName);
                 SendToDownloadbot(next);
             }
