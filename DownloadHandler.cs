@@ -136,13 +136,14 @@ namespace AnimeDown
             downloadQueue.Enqueue(pair);
             if (firstRun)
             {
-                var next = downloadQueue.Dequeue();
+                DownloadPair next = downloadQueue.Dequeue();
                 SendToDownloadbot(next);
                 firstRun = false;
-                System.Console.WriteLine("Waiting to be sent first DCC request");
+                Console.WriteLine("Waiting to be sent first DCC request");
             }
         }
-        string downloadDirectory;
+
+        private string downloadDirectory;
         public void SetDownloadDirectory(string path)
         {
             downloadDirectory = path;
