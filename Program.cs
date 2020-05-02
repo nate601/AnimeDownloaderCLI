@@ -117,7 +117,7 @@ namespace AnimeDown
                 Console.Write("|");
                 for (int j = 1; j <= GetTotalNumberOfEpisodes; j++)
                 {
-                    if (shows.Where((x) => (x.botName == botNames[i])).Any((x) => (int.Parse(x.episodeNumber) == j)))
+                    if (shows.Where((x) => x.botName == botNames[i]).Any((x) => int.Parse(x.episodeNumber) == j))
                     {
                         WriteInColor($"{j}", ConsoleColor.Green);
                         botNumberOfEpisodes++;
@@ -150,7 +150,7 @@ namespace AnimeDown
                     {
                         if (show.botName != botName)
                             continue;
-                        if (!showsToDownload.Where((entry => int.Parse(entry.episodeNumber) == i)).Any())
+                        if (!showsToDownload.Where(entry => int.Parse(entry.episodeNumber) == i).Any())
                         {
                             showsToDownload.Add(show);
                         }
@@ -193,7 +193,7 @@ namespace AnimeDown
                         continue;
                     if (int.Parse(show.episodeNumber) == i)
                     {
-                        if (!showsToDownload.Where((entry => int.Parse(entry.episodeNumber) == i)).Any())
+                        if (!showsToDownload.Where(entry => int.Parse(entry.episodeNumber) == i).Any())
                         {
                             showsToDownload.Add(show);
                         }
