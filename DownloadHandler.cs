@@ -17,8 +17,8 @@ namespace AnimeDown
         private const int RIZON_IRC_SERVER_PORT = 6697;
         private const string RIZON_IRC_CHANNEL_NAME = "#horriblesubs";
         private const string IRC_USERNAME_PREFIX = "animeguy69";
-        private readonly SimpleIRC irc;
-        readonly Queue<DownloadPair> downloadQueue = new Queue<DownloadPair>();
+        private SimpleIRC irc;
+        private readonly Queue<DownloadPair> downloadQueue = new Queue<DownloadPair>();
         private bool firstRun = true;
         private string[] currentUsers;
         public DownloadHandler()
@@ -29,8 +29,22 @@ namespace AnimeDown
             irc.IrcClient.OnUserListReceived += OnUserListReceived;
             irc.IrcClient.OnRawMessageReceived += RawMessageDebugLog;
             irc.SetCustomDownloadDir(System.IO.Directory.GetCurrentDirectory()); // ! This will be overwritten later.
-            irc.StartClient();
+            _ = irc.IrcClient.Connect();
+            int timeout = 0;
+            while (!irc.IrcClient.IsClientRunning())
+            {
+                Console.WriteLine("Waiting to connect to server...");
+                Thread.Sleep(50);
+                timeout++;
+                if (timeout > 3000)
+                {
+                    Console.WriteLine("Unable to connect to server!");
+                    throw new Exception("Unable to connect to server");
+                }
+            }
+            Console.WriteLine("Connected.");
         }
+
 
         private void RawMessageDebugLog(object sender, IrcRawReceivedEventArgs e)
         {
@@ -47,25 +61,22 @@ namespace AnimeDown
         private void WaitForUserList()
         {
             Console.WriteLine("Waiting for user list");
-            using (AutoResetEvent are = new AutoResetEvent(false))
+            using AutoResetEvent are = new AutoResetEvent(false);
+            new Task(async () =>
             {
-
-                new Task(async () =>
+                while (currentUsers == null)
                 {
-                    while (currentUsers == null)
-                    {
-                        System.Console.WriteLine("Still waiting...");
-                        await Task.Delay(500);
-                    }
-                    are.Set();
-                }).Start();
+                    System.Console.WriteLine("Still waiting...");
+                    await Task.Delay(500);
+                }
+                are.Set();
+            }).Start();
 
-                are.WaitOne((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
+            are.WaitOne((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
 
-                if (currentUsers == null)
-                    throw new Exception("Never recieved a user list!");
-                Console.WriteLine("User list found.");
-            }
+            if (currentUsers == null)
+                throw new Exception("Never recieved a user list!");
+            Console.WriteLine("User list found.");
         }
 
         private void OnUserListReceived(object sender, IrcUserListReceivedEventArgs e)

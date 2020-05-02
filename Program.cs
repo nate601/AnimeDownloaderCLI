@@ -8,10 +8,11 @@ namespace AnimeDown
 {
     partial class Program
     {
-        private static readonly DownloadHandler handler = new DownloadHandler();
+        private static DownloadHandler handler;
         private static bool hasBegunDownload = false;
         static void Main()
-        {
+	{
+	    handler = new DownloadHandler();
             Console.WriteLine("Anime Downloader");
             Console.Write("Anime Title:");
             var animeTitle = Console.ReadLine();
