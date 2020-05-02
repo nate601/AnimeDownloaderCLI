@@ -8,11 +8,7 @@ namespace AnimeDown
 {
     partial class Program
     {
-        // ? Consider changing back from Lazy initialization
-        // ? Using lazy initialization prevents the program from
-        // ? using resources connecting early, but now that user checking
-        // ? is implemented this is slightly pointless
-        private static readonly Lazy<DownloadHandler> handler = new Lazy<DownloadHandler>();
+        private static readonly DownloadHandler handler = new DownloadHandler();
         private static bool hasBegunDownload = false;
         static void Main()
         {
@@ -110,7 +106,7 @@ namespace AnimeDown
             for (int i = 0; i < botNames.Count; i++)
             {
                 int botNumberOfEpisodes = 0;
-                bool botIsOnline = handler.Value.IsUserPresent(botNames[i]);
+                bool botIsOnline = handler.IsUserPresent(botNames[i]);
                 Console.Write($"{i} : ");
                 WriteInColor($"{botNames[i]} [{(botIsOnline ? "ON" : "OFF")}LINE]", botIsOnline ? ConsoleColor.Green : ConsoleColor.Red);
                 Console.Write("\n");
@@ -225,7 +221,7 @@ namespace AnimeDown
         {
             if (!hasBegunDownload)
             {
-                handler.Value.SetDownloadDirectory(Path.Combine(Directory.GetCurrentDirectory(), entry.PrettyTitle()));
+                handler.SetDownloadDirectory(Path.Combine(Directory.GetCurrentDirectory(), entry.PrettyTitle()));
 
                 hasBegunDownload = true;
             }
@@ -235,7 +231,7 @@ namespace AnimeDown
                 int.Parse(entry.packNumber),
                 $"{ entry.PrettyTitle() } Episode { entry.episodeNumber }"
             );
-            handler.Value.Download(pair);
+            handler.Download(pair);
         }
 
         private static void Download(List<HorribleSubsPacklist.ShowEntry> entries)
