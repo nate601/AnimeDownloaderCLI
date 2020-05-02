@@ -103,25 +103,25 @@ namespace AnimeDown
                     botNames.Add(showEntry.botName);
                 }
             }
-            for (int i = 0; i < botNames.Count; i++)
+            for (int botIndex = 0; botIndex < botNames.Count; botIndex++)
             {
                 int botNumberOfEpisodes = 0;
-                bool botIsOnline = handler.IsUserPresent(botNames[i]);
-                Console.Write($"{i} : ");
-                WriteInColor($"{botNames[i]} [{(botIsOnline ? "ON" : "OFF")}LINE]", botIsOnline ? ConsoleColor.Green : ConsoleColor.Red);
+                bool botIsOnline = handler.IsUserPresent(botNames[botIndex]);
+                Console.Write($"{botIndex} : ");
+                WriteInColor($"{botNames[botIndex]} [{(botIsOnline ? "ON" : "OFF")}LINE]", botIsOnline ? ConsoleColor.Green : ConsoleColor.Red);
                 Console.Write("\n");
                 Console.Write("|");
-                for (int j = 1; j <= GetTotalNumberOfEpisodes; j++)
+                for (int episodeIndex = 1; episodeIndex <= GetTotalNumberOfEpisodes; episodeIndex++)
                 {
-                    if (shows.Where((x) => x.botName == botNames[i]).Any((x) => int.Parse(x.episodeNumber) == j))
+                    if (shows.Where((x) => x.botName == botNames[botIndex]).Any((x) => int.Parse(x.episodeNumber) == episodeIndex))
                     {
-                        WriteInColor($"{j}", ConsoleColor.Green);
+                        WriteInColor($"{episodeIndex}", ConsoleColor.Green);
                         botNumberOfEpisodes++;
                     }
                     else
                     {
 
-                        WriteInColor($"{j}", ConsoleColor.Red);
+                        WriteInColor($"{episodeIndex}", ConsoleColor.Red);
                     }
                     Console.Write("|");
                 }
