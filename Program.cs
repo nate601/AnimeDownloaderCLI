@@ -100,34 +100,37 @@ namespace AnimeDown
         {
             List<string> botNames = new List<string>();
             int GetTotalNumberOfEpisodes = HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(shows);
-	    foreach (var showEntry in shows)
+            foreach (var showEntry in shows)
             {
-                if (!botNames.Contains(showEntry.botName)) { 
-		    botNames.Add(showEntry.botName);
-		}
+                if (!botNames.Contains(showEntry.botName))
+                {
+                    botNames.Add(showEntry.botName);
+                }
             }
             for (int i = 0; i < botNames.Count; i++)
             {
-		int botNumberOfEpisodes = 0;
+                int botNumberOfEpisodes = 0;
                 bool botIsOnline = handler.Value.IsUserPresent(botNames[i]);
                 Console.Write($"{i} : ");
                 WriteInColor($"{botNames[i]} [{(botIsOnline ? "ON" : "OFF")}LINE]", botIsOnline ? ConsoleColor.Green : ConsoleColor.Red);
                 Console.Write("\n");
-		Console.Write("|");
-		for (int j = 1; j <=  GetTotalNumberOfEpisodes; j++)
-		{
-		    if(shows.Where((x)=>(x.botName==botNames[i])).Any((x)=>(int.Parse(x.episodeNumber) == j)))
-		    {
-			WriteInColor($"{j}", ConsoleColor.Green);
-			botNumberOfEpisodes++;
-		    }else{
-			    
-			WriteInColor($"{j}", ConsoleColor.Red);
-		    }
-		    Console.Write("|");		    
-		}
-		Console.WriteLine($"\n {botNumberOfEpisodes}/{GetTotalNumberOfEpisodes}");
-		
+                Console.Write("|");
+                for (int j = 1; j <= GetTotalNumberOfEpisodes; j++)
+                {
+                    if (shows.Where((x) => (x.botName == botNames[i])).Any((x) => (int.Parse(x.episodeNumber) == j)))
+                    {
+                        WriteInColor($"{j}", ConsoleColor.Green);
+                        botNumberOfEpisodes++;
+                    }
+                    else
+                    {
+
+                        WriteInColor($"{j}", ConsoleColor.Red);
+                    }
+                    Console.Write("|");
+                }
+                Console.WriteLine($"\n {botNumberOfEpisodes}/{GetTotalNumberOfEpisodes}");
+
             }
             var botNumber = ReadNumber("Which bot would you like to download from?", botNames.Count - 1);
 
