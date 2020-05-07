@@ -10,8 +10,8 @@ namespace AnimeDown
         private static DownloadHandler handler;
         private static bool hasBegunDownload = false;
         static void Main()
-	{
-	    handler = new DownloadHandler();
+        {
+            handler = new DownloadHandler();
             Console.WriteLine("Anime Downloader");
             Console.Write("Anime Title:");
             var animeTitle = Console.ReadLine();
