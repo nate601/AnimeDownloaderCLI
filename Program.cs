@@ -15,12 +15,12 @@ namespace AnimeDown
             handler = new DownloadHandler();
             Console.WriteLine("Anime Downloader");
             Console.Write("Anime Title:");
-            var animeTitle = Console.ReadLine();
+            string animeTitle = Console.ReadLine();
 
 
             HorribleSubsPacklist horrible = new HorribleSubsPacklist();
 
-            var shows = horrible.GetShow(animeTitle);
+            List<HorribleSubsPacklist.ShowEntry> shows = horrible.GetShow(animeTitle);
             if (shows.Count == 0)
             {
                 Console.WriteLine("Unfortunately, this anime is either not spelled correctly, or not subbed by HorribleSubs.");
@@ -28,9 +28,9 @@ namespace AnimeDown
                 Console.ReadLine();
                 return;
             }
-            var showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames(shows);
-            var getShowQualities = HorribleSubsPacklist.ShowEntry.GetShowQualities(shows);
-            var sortedShows = HorribleSubsPacklist.ShowEntry.GetShowsSeperated(shows);
+            List<string> showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames(shows);
+            Dictionary<string, HorribleSubsPacklist.Quality[]> getShowQualities = HorribleSubsPacklist.ShowEntry.GetShowQualities(shows);
+            List<List<HorribleSubsPacklist.ShowEntry>> sortedShows = HorribleSubsPacklist.ShowEntry.GetShowsSeperated(shows);
 
             PrintShowNamesTable(sortedShows, showNamePossibilities, animeTitle);
 
@@ -44,7 +44,7 @@ namespace AnimeDown
             List<HorribleSubsPacklist.ShowEntry> showsShakenByQuality = HorribleSubsPacklist.ShowEntry.ShakeByShowQuality(chosenQuality, showsShakenByName);
 
 
-            var DownloadMethodMap = new Dictionary<ConsoleKey, Action<List<HorribleSubsPacklist.ShowEntry>>>(){
+            Dictionary<ConsoleKey, Action<List<HorribleSubsPacklist.ShowEntry>>> DownloadMethodMap = new Dictionary<ConsoleKey, Action<List<HorribleSubsPacklist.ShowEntry>>>(){
                 {ConsoleKey.A, DownloadAllPrompt},
                 {ConsoleKey.S, DownloadSomePrompt},
                 {ConsoleKey.O, DownloadOnePrompt},
