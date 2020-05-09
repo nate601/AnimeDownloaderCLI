@@ -25,7 +25,7 @@ namespace AnimeDown
             {
                 Console.WriteLine("Unfortunately, this anime is either not spelled correctly, or not subbed by HorribleSubs.");
                 Console.WriteLine("Try another source for this anime!");
-                Console.ReadLine();
+                _ = Console.ReadLine();
                 return;
             }
             List<string> showNamePossibilities = HorribleSubsPacklist.ShowEntry.GetShowNames(shows);
@@ -53,7 +53,7 @@ namespace AnimeDown
                 $"There are {HorribleSubsPacklist.ShowEntry.GetTotalNumberOfEpisodes(showsShakenByQuality)} episodes of {HorribleSubsPacklist.ShowEntry.GetShowNames(showsShakenByQuality).First()} out." + "\n" +
                 "Would you like to download (a)ll of them, (s)ome of them, or (o)ne of them?\n",
                 DownloadMethodMap)(showsShakenByQuality);
-            Console.ReadLine();
+            _ = Console.ReadLine();
         }
 
         private static void PrintShowNamesTable(List<List<HorribleSubsPacklist.ShowEntry>> sortedShows, List<string> showNamePossibilities, string animeTitle)
