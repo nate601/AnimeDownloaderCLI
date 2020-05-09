@@ -9,7 +9,8 @@ namespace AnimeDown
     {
         private static DownloadHandler handler;
         private static bool hasBegunDownload = false;
-        static void Main()
+
+        private static void Main()
         {
             handler = new DownloadHandler();
             Console.WriteLine("Anime Downloader");
