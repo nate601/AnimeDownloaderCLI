@@ -31,9 +31,15 @@ namespace AnimeDown
             irc.SetCustomDownloadDir(System.IO.Directory.GetCurrentDirectory()); // ! This will be overwritten later.
             _ = irc.IrcClient.Connect();
             int timeout = 0;
+            int cursorTop = Console.CursorTop;
             while (!irc.IrcClient.IsClientRunning())
             {
-                Console.WriteLine("Waiting to connect to server...");
+                Console.SetCursorPosition(0,cursorTop);
+                Console.Write("Waiting to connect to server");
+                for (int i = 0; i < timeout % 4; i++)
+                {
+                    Console.Write(".");
+                }
                 Thread.Sleep(50);
                 timeout++;
                 if (timeout > 3000)
